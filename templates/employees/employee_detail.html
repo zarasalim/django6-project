@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карточка сотрудника</title>
+</head>
+<body>
+    <h1>
+        Подробная карточка сотрудника:
+        {{ employee.first_name }} {{ employee.last_name }}
+    </h1>
+
+    <h2>Заглавное фото</h2>
+
+    {% if first_image %}
+        <img
+            src="{{ first_image.image.url }}"
+            alt="Фото {{ employee.first_name }}"
+            width="250"
+        >
+    {% else %}
+        <p>Фотография отсутствует.</p>
+    {% endif %}
+
+    <h2>Личная информация</h2>
+
+    <p>Имя: {{ employee.first_name }}</p>
+    <p>Фамилия: {{ employee.last_name }}</p>
+    <p>Пол: {{ employee.gender }}</p>
+
+    {% if employee.hire_date %}
+        <p>
+            Дата приёма на работу:
+            {{ employee.hire_date|date:"d.m.Y" }}
+        </p>
+        <p>Стаж работы: {{ employee.tenure_days }} дней</p>
+    {% else %}
+        <p>Дата приёма на работу не указана.</p>
+    {% endif %}
+
+    <h2>Навыки сотрудника</h2>
+
+    <p>{{ employee.skills|default:"Навыки не указаны" }}</p>
+
+    <h2>Рабочее место</h2>
+
+    {% if employee.workplace %}
+        <p>Номер стола: {{ employee.workplace.number }}</p>
+    {% else %}
+        <p>Рабочее место не назначено.</p>
+    {% endif %}
+
+    <h2>Галерея фотографий</h2>
+
+    <div class="gallery">
+        {% for photo in gallery %}
+            <div>
+                <img
+                    src="{{ photo.image.url }}"
+                    alt="Фото сотрудника"
+                    width="200"
+                >
+                <p>Порядок фотографии: {{ photo.order }}</p>
+            </div>
+        {% empty %}
+            <p>Других фотографий нет.</p>
+        {% endfor %}
+    </div>
+
+    <p>
+        <a href="{% url 'employee_list' %}">
+            Назад к списку сотрудников
+        </a>
+    </p>
+
+    <p>
+        <a href="{% url 'home' %}">На главную</a>
+    </p>
+</body>
+</html>

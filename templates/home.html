@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+</head>
+<body>
+    <h1>Добро пожаловать в компанию!</h1>
+
+    <p>
+        Это сайт для просмотра информации о сотрудниках и их навыках.
+    </p>
+
+    <p>
+        Всего сотрудников в базе:
+        <strong>{{ employees_count }}</strong>
+    </p>
+
+    <p>
+        <a href="{% url 'employee_list' %}">
+            Список сотрудников
+        </a>
+    </p>
+
+    <h2>Последние сотрудники</h2>
+
+    <div class="employee-list">
+        {% for employee in employees %}
+            <article class="employee-card">
+                {% with photo=employee.images.first %}
+                    {% if photo %}
+                        <img
+                            src="{{ photo.image.url }}"
+                            alt="Фото {{ employee.first_name }}"
+                            width="150"
+                        >
+                    {% endif %}
+                {% endwith %}
+
+                <h3>
+                    <a href="{% url 'employee_detail' employee.pk %}">
+                        {{ employee.first_name }}
+                        {{ employee.last_name }}
+                    </a>
+                </h3>
+
+                <p>
+                    Навыки: {{ employee.skills|default:"Не указаны" }}
+                </p>
+
+                {% if employee.hire_date %}
+                    <p>
+                        Дата приёма:
+                        {{ employee.hire_date|date:"d.m.Y" }}
+                    </p>
+                    <p>
+                        Стаж: {{ employee.tenure_days }} дней
+                    </p>
+                {% else %}
+                    <p>Дата приёма на работу не указана.</p>
+                {% endif %}
+            </article>
+            <hr>
+        {% empty %}
+            <p>Сотрудников пока нет.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
